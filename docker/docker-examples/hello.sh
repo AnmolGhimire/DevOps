@@ -1,3 +1,4 @@
+
 cd docker/docker-examples
 echo "#################################"
 whoami

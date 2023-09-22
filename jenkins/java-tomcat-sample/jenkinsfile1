@@ -37,7 +37,16 @@ pipeline{
             }
         }
     }
+        stage("deploy to production"){
+            steps{
+                echo "running in production env"
+                sh '''
+                docker container stop tomcatprodenv || true
+                docker container rm tomcatprodenv || true
+                docker run -itd --name tomcatprodenv -p 8087:8080 localtomcatimg:$BUILD_NUMBER
+                sh '''
+            }
+        }
 }
-
 
 

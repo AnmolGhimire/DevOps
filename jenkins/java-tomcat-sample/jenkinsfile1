@@ -36,7 +36,6 @@ pipeline{
                 sh '''
             }
         }
-    }
         stage("deploy to production"){
             steps{
                 echo "running in production env"
@@ -47,6 +46,9 @@ pipeline{
                 sh '''
             }
         }
+    }
+
+        
 }
 
 

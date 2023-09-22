@@ -38,6 +38,9 @@ pipeline{
         }
         stage("deploy to production"){
             steps{
+                timeout(time:1,unit:"Days"){
+                inputmessage:'Approve PRODUCTION deployment?'
+                }
                 echo "running in production env"
                 sh '''
                 docker container stop tomcatprodenv || true

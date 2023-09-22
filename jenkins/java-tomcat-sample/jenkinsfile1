@@ -18,14 +18,25 @@ pipeline{
                 copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: env.JOB_NAME, selector: specific(env.BUILD_NUMBER)
                 echo "building docker image"
                 sh '''
-                original_pwd=$(pwd -P)
+                original_pwd = $(pwd -P)
                 cd jenkins/java-tomcat-sample
                 docker build -t localtomcatimg:$BUILD_NUMBER .
-                cd $original_pwd
+                cd original_pwd
                 sh '''
             }
 
         }
+        stage('deploy to stagging'){
+            steps{
+                echo "running in stagging env"
+                sh '''
+                docker container stop tomcatstaggingenv || true
+                docker container rm -f tomcatstaggingenv || true
+                docker run -itd --name tomcatstaggingenv -p 8089:8080 localtomcatimg:$BUILD_NUMBER
+                sh '''
+            }
+        }
     }
 }
+
 

@@ -38,8 +38,8 @@ pipeline{
         }
         stage("deploy to production"){
             steps{
-                timeout(time:1, unit:'DAYS'){
-                input message:'Approve PRODUCTION deployment?'
+                timeout(time:1,unit:"Days"){
+                inputmessage:'Approve PRODUCTION deployment?'
                 }
                 echo "running in production env"
                 sh '''
@@ -50,8 +50,39 @@ pipeline{
             }
         }
     }
+    post { 
+        always { 
+            mail to: 'harikamai@gmail.com',
+            subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input",
+            body: "Please go to ${BUILD_URL} and verify the build"
+        }
+        success {
+            mail bcc: 'harikamai@gmail.com', body: """Hi Team,
 
-        
+Build #$BUILD_NUMBER is successful, please go through the url
+
+$BUILD_URL
+
+and verify the details.
+
+Regards,
+DevOps Team""", cc: '', from: '', replyTo: '', subject: 'BUILD SUCCESS NOTIFICATION', to: 'harikamai@gmail.com'
+        }
+        failure {
+            mail bcc: 'harikamai@gmail.com', body: """Hi Team,
+            
+Build #$BUILD_NUMBER is unsuccessful, please go through the url
+
+$BUILD_URL
+
+and verify the details.
+
+Regards,
+DevOps Team""", cc: '', from: '', replyTo: '', subject: 'BUILD FAILED NOTIFICATION', to: 'harikamai@gmail.com'
+        }
+    }
 }
+
+
 
 

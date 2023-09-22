@@ -2,7 +2,7 @@ pipeline{
     agent any
     stages{
         stage('build'){
-            step{
+            steps{
                 sh 'mvn -f jenkins/java-tomcat-sample/pom.xml clean package'
             }
             post{
